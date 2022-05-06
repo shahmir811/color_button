@@ -1,57 +1,45 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
-test('button has correct inital color', () => {
+test('button has correct initial color', () => {
 	render(<App />);
 
-	// find an element with the role of button and text of 'Change to blue'
+	// find an element with a role of button and text of 'Change to blue'
 	const colorButton = screen.getByRole('button', { name: 'Change to blue' });
 
-	//expect the background color to be red
-	expect(colorButton).toHaveStyle({
-		backgroundColor: 'red',
-	});
+	// expect the background color to be red
+	expect(colorButton).toHaveStyle({ backgroundColor: 'red' });
 
-	// button has been clicked
+	// click button
 	fireEvent.click(colorButton);
 
-	// button turns blue when clicked
-	expect(colorButton).toHaveStyle({
-		backgroundColor: 'blue',
-	});
+	// expect the background color to be blue
+	expect(colorButton).toHaveStyle({ backgroundColor: 'blue' });
 
-	// expect the button text to be "Change to red"
+	// expect the button text to be 'Change to red'
 	expect(colorButton.textContent).toBe('Change to red');
 });
 
 test('initial conditions', () => {
 	render(<App />);
 
+	// check that the button starts out enabled
 	const colorButton = screen.getByRole('button', { name: 'Change to blue' });
-	const checkbox = screen.getByRole('checkbox');
-
-	// At start, button is enabled
 	expect(colorButton).toBeEnabled();
 
-	// At start, checkbox is unchecked
+	// check that the checkbox starts out unchecked
+	const checkbox = screen.getByRole('checkbox');
 	expect(checkbox).not.toBeChecked();
 });
 
-test('when checkbox is checked, button is disabled', () => {
+test('Checkbox disables button on first click and enables on second click', () => {
 	render(<App />);
-
+	const checkbox = screen.getByRole('checkbox', { name: 'Disable button' });
 	const colorButton = screen.getByRole('button', { name: 'Change to blue' });
-	const checkBox = screen.getByRole('checkbox');
 
-	// click the checkbox
-	fireEvent.click(checkBox);
-
-	// button is disabled when checkbox is checked
+	fireEvent.click(checkbox);
 	expect(colorButton).toBeDisabled();
 
-	// click the checkbox second time
-	fireEvent.click(checkBox);
-
-	// button is enabled when checkbox is unchecked
+	fireEvent.click(checkbox);
 	expect(colorButton).toBeEnabled();
 });
